@@ -9,7 +9,10 @@ public class RequestExceptionHandler {
 
 	@ExceptionHandler(value = {RequestException.class})
 	public ResponseEntity<Object> handleException(RequestException e) {
-		return new ResponseEntity<Object>(e.getMessage(), e.getStatus());
+		ErrorResponse res = new ErrorResponse();
+		res.setMessage(e.getMessage());
+		res.setStatus(e.getStatus());
+		return new ResponseEntity<>(res, e.getStatus());
 	}
 	
 }
