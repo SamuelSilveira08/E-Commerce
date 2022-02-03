@@ -17,6 +17,7 @@ import br.com.vinharia.domain.Product;
 import br.com.vinharia.dto.ProductDTO;
 import br.com.vinharia.exceptions.NotFoundException;
 import br.com.vinharia.repositories.ProductRepository;
+import br.com.vinharia.service.ProductService;
 
 @RestController
 @RequestMapping("/products")
@@ -27,10 +28,13 @@ public class ProductController {
 	
 	@Autowired
 	private ModelMapper mapper;
+	
+	@Autowired
+	private ProductService service;
 
 	@GetMapping
-	public List<Product> getAllProducts() {
-		return repository.findAll();
+	public List<ProductDTO> getAllProducts() {
+		return service.getProducts();
 	}
 	
 	@GetMapping("/{id}")

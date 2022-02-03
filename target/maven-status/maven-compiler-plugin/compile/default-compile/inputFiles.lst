@@ -1,6 +1,7 @@
 C:\Users\Samuel\eclipse-workspace\vinharia-project\src\main\java\br\com\vinharia\exceptions\NotFoundException.java
 C:\Users\Samuel\eclipse-workspace\vinharia-project\src\main\java\br\com\vinharia\Application.java
 C:\Users\Samuel\eclipse-workspace\vinharia-project\src\main\java\br\com\vinharia\exceptions\RequestExceptionHandler.java
+C:\Users\Samuel\eclipse-workspace\vinharia-project\src\main\java\br\com\vinharia\service\ProductService.java
 C:\Users\Samuel\eclipse-workspace\vinharia-project\src\main\java\br\com\vinharia\dto\ProductDTO.java
 C:\Users\Samuel\eclipse-workspace\vinharia-project\src\main\java\br\com\vinharia\repositories\ProductRepository.java
 C:\Users\Samuel\eclipse-workspace\vinharia-project\src\main\java\br\com\vinharia\controllers\ProductController.java
