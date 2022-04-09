@@ -2,7 +2,6 @@ package br.com.vinharia.controllers;
 
 import java.util.List;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,19 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.vinharia.domain.Product;
 import br.com.vinharia.dto.ProductDTO;
-import br.com.vinharia.exceptions.NotFoundException;
-import br.com.vinharia.repositories.ProductRepository;
 import br.com.vinharia.service.ProductService;
 
 @RestController
 @RequestMapping("/products")
 public class ProductController {
-	
-	@Autowired
-	private ProductRepository repository;
-	
-	@Autowired
-	private ModelMapper mapper;
 	
 	@Autowired
 	private ProductService service;
@@ -39,26 +30,22 @@ public class ProductController {
 	
 	@GetMapping("/{id}")
 	public ProductDTO getProduct(@PathVariable Long id) {
-		var p = repository.findById(id);
-		ProductDTO pDTO = mapper.map(p.get(), ProductDTO.class);
-		return pDTO;
-//		return repository.findById(id).orElseThrow(() -> new NotFoundException("Product not found."));
+		return service.getProduct(id);
 	}
 	
 	@PostMapping("/products")
-	public Product saveProduct(@RequestBody Product newProduct) {
-		return repository.save(newProduct);
+	public ProductDTO saveProduct(@RequestBody Product newProduct) {
+		return service.saveProduct(newProduct);
 	}
 	
 	@PutMapping("/{id}")
-	public Product editProduct(@RequestBody Product product, @PathVariable Long id) {
-		return repository.save(product);
+	public ProductDTO updateProduct(@RequestBody Product product, @PathVariable Long id) {
+		return service.updateProduct(product);
 	}
 	
 	@DeleteMapping("/{id}")
 	public void deleteProduct(@PathVariable Long id) {
-		Product product = repository.findById(id).orElseThrow(() -> new NotFoundException("Product not found."));
-		repository.delete(product);
+		service.deleteProduct(id);
 	}
 	
 	
