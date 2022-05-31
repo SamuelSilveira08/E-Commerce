@@ -8,11 +8,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,16 +32,20 @@ public class Purchase {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
+	@NotNull(message = "Field price cannot be null - If purchase has no price, pass 0.")
 	private Double price;
 	
-	@ManyToMany
-	private List<Product> products;
+	@OneToMany(mappedBy = "purchase")
+	@NotNull(message = "Field products cannot be null!")
+	private List<Item> items;
 	
 	@ManyToOne
 	@JoinColumn(name = "user_id")
+	@NotNull(message = "Field user cannot be null!")
 	private User user;
 	
 	@Temporal(TemporalType.DATE)
+	@NotNull(message = "Field date cannot be null!")
 	private Date date;
 	
 	
