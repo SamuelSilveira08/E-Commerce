@@ -1,5 +1,7 @@
 package br.com.ecommerce.dto;
 
+import org.springframework.hateoas.RepresentationModel;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +11,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductDTO {
+public class ProductDTO extends RepresentationModel<ProductDTO> {
 	
 	private Integer id;
 	private String name;

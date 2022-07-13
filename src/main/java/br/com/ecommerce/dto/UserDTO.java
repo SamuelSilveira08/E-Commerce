@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.validation.constraints.NotBlank;
 
+import org.springframework.hateoas.RepresentationModel;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
@@ -16,7 +18,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO {
+public class UserDTO extends RepresentationModel<UserDTO> {
 
 	private Integer id;
 	@NotBlank
