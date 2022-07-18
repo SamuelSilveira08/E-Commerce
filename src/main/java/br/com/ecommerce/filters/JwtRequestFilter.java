@@ -44,7 +44,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
 		if (isUsernameNotInContext(username)) {
 			addUsernameToContext(request, username, token);
-			System.out.println("Username was not in context");
 		}
 
 		filterChain.doFilter(request, response);

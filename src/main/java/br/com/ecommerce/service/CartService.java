@@ -22,6 +22,7 @@ import br.com.ecommerce.exceptions.BadRequestException;
 import br.com.ecommerce.exceptions.ForbiddenException;
 import br.com.ecommerce.exceptions.NotFoundException;
 import br.com.ecommerce.repositories.CartRepository;
+import br.com.ecommerce.repositories.UserRepository;
 
 @Service
 public class CartService {
@@ -31,9 +32,12 @@ public class CartService {
 
 	@Autowired
 	private UserService userService;
-
+	
 	@Autowired
 	private ModelMapper mapper;
+	
+	@Autowired
+	private UserRepository userRepo;
 
 	/**
 	 * Return paginated data from all carts saved in database
@@ -114,11 +118,13 @@ public class CartService {
 		if (cartDTO.getTotalPrice() == null) {
 			cartDTO.setTotalPrice(0.0);
 		}
-		User user = userPrincipal.getUser();
-		Cart cart = mapper.map(cartDTO, Cart.class);
-		if (user == null) {
+		if (cartDTO.getUserId() == null) {
 			throw new ConstraintViolationException("Cart must be sent with userId", null);
 		}
+		Cart cart = mapper.map(cartDTO, Cart.class);
+		User user = userRepo.findById(cartDTO.getUserId()).get();
+		cart.setUser(user);
+		user.setCart(cart);
 		if (user.getEmail() == userPrincipal.getUsername() || userPrincipal.isAdmin()) {
 			cart = cartRepository.save(cart);
 			cartDTO.setId(cart.getId());

@@ -2,6 +2,7 @@ package br.com.ecommerce.domain;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -34,7 +35,7 @@ public class Cart {
 	@NotNull(message = "Field cannot be null. If cart has no items yet, totalPrice must receive 0")
 	private Double totalPrice;
 	
-	@OneToOne(mappedBy = "cart")
+	@OneToOne(mappedBy = "cart", cascade = CascadeType.MERGE)
 	@NotNull(message = "Field user cannot be null!")
 	private User user;
 	
