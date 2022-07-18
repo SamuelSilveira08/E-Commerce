@@ -113,7 +113,7 @@ public class ProductService {
 
 	public void deleteProduct(Integer id) {
 		Product productToDelete = productRepository.findById(id)
-				.orElseThrow(() -> new NotFoundException("Product with id %id not found.".formatted(id)));
+				.orElseThrow(() -> new NotFoundException("Product with id %d not found.".formatted(id)));
 		productRepository.delete(productToDelete);
 	}
 
