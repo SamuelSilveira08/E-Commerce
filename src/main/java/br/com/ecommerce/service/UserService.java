@@ -133,7 +133,7 @@ public class UserService {
 		 */
 		if (email.equals(userPrincipal.getUsername()) || userPrincipal.isAdmin()) {
 			
-			/* Checks whether user is admin and, if positive, checks if admin is trying to update themself
+			/* Below code checks whether user is admin and, if positive, checks if admin is trying to update themself
 			 * or another user and sets admin field accordingly
 			 */
 			

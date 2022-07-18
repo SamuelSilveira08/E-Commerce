@@ -41,17 +41,17 @@ public class ItemController {
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
 	@PreAuthorize(value = "hasRole('ADMIN')")
-	public List<ItemDTO> getAllItems(@RequestParam(defaultValue = "0") Integer pageNumber,
+	public List<ItemDTO> getAllItems(@RequestParam(defaultValue = "0") Integer pageNum,
 			@RequestParam(defaultValue = "10") Integer numberItems, @RequestParam(defaultValue = "id") String sortBy) {
-		return itemService.getItems(pageNumber, numberItems, sortBy);
+		return itemService.getItems(pageNum, numberItems, sortBy);
 	}
 
 	@GetMapping("/byCart/{cartId}")
 	@ResponseStatus(HttpStatus.OK)
-	public List<ItemDTO> getAllItemsOfACart(@RequestParam(defaultValue = "0") Integer pageNumber,
+	public List<ItemDTO> getAllItemsOfACart(@RequestParam(defaultValue = "0") Integer pageNum,
 			@RequestParam(defaultValue = "10") Integer numberItems, @RequestParam(defaultValue = "id") String sortBy,
 			@PathVariable Integer cartId, @AuthenticationPrincipal UserPrincipal user) {
-		return itemService.getItemsOfACart(pageNumber, numberItems, sortBy, cartId, user);
+		return itemService.getItemsOfACart(pageNum, numberItems, sortBy, cartId, user);
 	}
 
 	@GetMapping("/{id}")

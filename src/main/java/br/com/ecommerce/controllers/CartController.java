@@ -43,9 +43,9 @@ public class CartController {
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
 	@PreAuthorize(value = "hasRole('ADMIN')")
-	public List<CartDTO> getAllCarts(@RequestParam(defaultValue = "0") Integer pageNumber,
+	public List<CartDTO> getAllCarts(@RequestParam(defaultValue = "0") Integer pageNum,
 			@RequestParam(defaultValue = "10") Integer numberItems, @RequestParam(defaultValue = "id") String sortBy) {
-		return cartService.getAllCarts(pageNumber, numberItems, sortBy);
+		return cartService.getAllCarts(pageNum, numberItems, sortBy);
 	}
 
 	@GetMapping("/{id}")

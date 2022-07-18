@@ -40,17 +40,17 @@ public class PurchaseController {
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
 	@PreAuthorize(value = "hasRole('ADMIN')")
-	public List<PurchaseDTO> getPurchases(@RequestParam(defaultValue = "0") Integer pageNumber,
+	public List<PurchaseDTO> getPurchases(@RequestParam(defaultValue = "0") Integer pageNum,
 			@RequestParam(defaultValue = "10") Integer numberItems, @RequestParam(defaultValue = "id") String sortBy) {
-		return purchaseService.getPurchases(pageNumber, numberItems, sortBy);
+		return purchaseService.getPurchases(pageNum, numberItems, sortBy);
 	}
 
 	@GetMapping("/byUser/{userId}")
 	@ResponseStatus(HttpStatus.OK)
-	public List<PurchaseDTO> getPurchasesByUser(@RequestParam(defaultValue = "0") Integer pageNumber,
+	public List<PurchaseDTO> getPurchasesByUser(@RequestParam(defaultValue = "0") Integer pageNum,
 			@RequestParam(defaultValue = "10") Integer numberItems, @RequestParam(defaultValue = "id") String sortBy,
 			@PathVariable Integer userId, @AuthenticationPrincipal UserPrincipal user) {
-		return purchaseService.getPurchasesByUserId(pageNumber, numberItems, sortBy, userId, user);
+		return purchaseService.getPurchasesByUserId(pageNum, numberItems, sortBy, userId, user);
 	}
 
 	@GetMapping("/{id}")

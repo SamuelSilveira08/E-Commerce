@@ -49,9 +49,9 @@ public class UserController {
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
 	@PreAuthorize(value = "hasRole('ADMIN')")
-	public List<UserDTO> getAllUsers(@RequestParam(defaultValue = "0") Integer pageNumber,
+	public List<UserDTO> getAllUsers(@RequestParam(defaultValue = "0") Integer pageNum,
 			@RequestParam(defaultValue = "10") Integer numberItems, @RequestParam(defaultValue = "id") String sortBy) {
-		return userService.getUsers(pageNumber, numberItems, sortBy);
+		return userService.getUsers(pageNum, numberItems, sortBy);
 	}
 
 	@GetMapping("/{id}")

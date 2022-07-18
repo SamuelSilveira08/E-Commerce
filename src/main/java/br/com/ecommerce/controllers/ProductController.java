@@ -38,9 +38,9 @@ public class ProductController {
 	
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
-	public List<ProductDTO> getAllProducts(@RequestParam(defaultValue = "0") Integer pageNumber,
+	public List<ProductDTO> getAllProducts(@RequestParam(defaultValue = "0") Integer pageNum,
 			@RequestParam(defaultValue = "10") Integer numberItems, @RequestParam(defaultValue = "id") String sortBy) {
-		return service.getProducts(pageNumber, numberItems, sortBy);
+		return service.getProducts(pageNum, numberItems, sortBy);
 	}
 	
 	@GetMapping("/{id}")
