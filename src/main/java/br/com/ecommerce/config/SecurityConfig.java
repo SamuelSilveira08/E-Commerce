@@ -39,9 +39,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.anyRequest().authenticated();
 
 		/*
-		 * Since application is running in localhost, there's no session, so Spring
-		 * Security blocks non-get requests because of CSRF, that's why it's disabled.
+		 * API uses token-based authentication, so CSRF is not needed, because there's no way
+		 * a website can get the auth token and use it to forge a request
+		 * Unless the client-side stores the token in a not http-only cookie, which would make it
+		 * available to be accessible through JavaScript, so I wouldn't recommend that xD
 		 */
+		
 		http.csrf().disable();
 
 		http.logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"));

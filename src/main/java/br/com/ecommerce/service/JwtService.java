@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -17,8 +18,8 @@ public class JwtService {
 
 	private static final String SIGNING_KEY = "2VEYgS9YL5eb7Bgvd9TsR6eaADT1ltIi";
 	private static final String REFRESH_TOKEN_SIGNING_KEY = "sl6yPLmsjEryNxLKj1h00tjLXx5ufl7n";
-	private static final int EXPIRATION_TIME = 600;
-	private static final int REFRESH_TOKEN_EXPIRATION_TIME = 900;
+	private static final int EXPIRATION_TIME = (int) TimeUnit.DAYS.toSeconds(3);
+	private static final int REFRESH_TOKEN_EXPIRATION_TIME = (int) TimeUnit.DAYS.toSeconds(3);
 
 	
 	/**

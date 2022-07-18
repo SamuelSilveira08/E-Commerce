@@ -20,6 +20,7 @@ import br.com.ecommerce.exceptions.BadRequestException;
 import br.com.ecommerce.exceptions.ForbiddenException;
 import br.com.ecommerce.exceptions.InvalidPasswordException;
 import br.com.ecommerce.exceptions.NotFoundException;
+import br.com.ecommerce.exceptions.UsernameAlreadyExistsException;
 import br.com.ecommerce.repositories.UserRepository;
 import br.com.ecommerce.utils.PasswordUtils;
 
@@ -95,9 +96,17 @@ public class UserService {
 		// should encode after mapping
 		String encodedPassword = PasswordUtils.encode(userDTO.getPassword());
 		userDTO.setPassword(encodedPassword);
+		
 		// Cannot register an admin user through public endpoint
 		userDTO.setAdmin(false);
+		
 		User user = mapper.map(userDTO, User.class);
+		
+		// Check whether username is already in database
+		if(userRepository.checkIfUsernameAlreadyExists(user.getEmail()) == 1) {
+			throw new UsernameAlreadyExistsException("Oops! It seems like this email is already in our database");
+		};
+		
 		user = userRepository.save(user);
 		userDTO = mapper.map(user, UserDTO.class);
 		return userDTO;
@@ -118,7 +127,24 @@ public class UserService {
 	public UserDTO updateUser(UserDTO userDTO, Integer id, UserPrincipal userPrincipal) {
 		String email = userRepository.findById(id)
 				.orElseThrow(() -> new NotFoundException("User with given id %d not found".formatted(id))).getEmail();
+		
+		/* Line below checks if user is an admin (that can update any user's data) or if user being updated is
+		 * the same user that is logged in ('cause normal users can only updated their own data) 
+		 */
 		if (email.equals(userPrincipal.getUsername()) || userPrincipal.isAdmin()) {
+			
+			/* Checks whether user is admin and, if positive, checks if admin is trying to update themself
+			 * or another user and sets admin field accordingly
+			 */
+			
+			if(userPrincipal.isAdmin()) {
+				if(email.equals(userPrincipal.getUsername())) {
+					userDTO.setAdmin(true);
+				}
+			} else {
+				userDTO.setAdmin(false);
+			}
+			
 			userDTO.setId(id);
 			User user = mapper.map(userDTO, User.class);
 			String encodedPassword = PasswordUtils.encode(user.getPassword());

@@ -77,7 +77,9 @@ public class RequestExceptionHandler {
 	@ExceptionHandler(value = { HttpMessageNotReadableException.class })
 	public ResponseEntity<Object> handleConstraintViolationException(HttpMessageNotReadableException e) {
 		ErrorResponse res = new ErrorResponse();
-		res.setMessage(e.getMessage());
+		// Not using 
+		res.setMessage("Oops! It seems there's an error in your JSON, so the message could not be readed. "
+				+ "Additional information: %s".formatted(e.getMessage()));
 		res.setStatus(HttpStatus.BAD_REQUEST);
 		return new ResponseEntity<>(res, res.getStatus());
 	}
