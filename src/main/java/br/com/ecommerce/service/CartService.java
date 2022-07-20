@@ -31,9 +31,6 @@ public class CartService {
 	private CartRepository cartRepository;
 
 	@Autowired
-	private UserService userService;
-	
-	@Autowired
 	private ModelMapper mapper;
 	
 	@Autowired
@@ -151,9 +148,14 @@ public class CartService {
 		Cart cart = cartRepository.findById(id)
 				.orElseThrow(() -> new NotFoundException("Cart with given id %d not found".formatted(id)));
 		cartDTO.setId(id);
+		if(cartDTO.getUserId() == null) {
+			throw new BadRequestException("userId cannot be null! Please, refactor your request and include the userId");
+		}
 		cart = mapper.map(cartDTO, Cart.class);
-		cart.setUser(mapper.map(userService.getUser(cartDTO.getUserId(), userPrincipal), User.class));
-		if (cart.getUser().getEmail() == userPrincipal.getUsername() || userPrincipal.isAdmin()) {
+		User user = userRepo.findById(cartDTO.getUserId()).get();
+		user.setCart(cart);
+		cart.setUser(user);
+		if (user.getEmail() == userPrincipal.getUsername() || userPrincipal.isAdmin()) {
 			cartRepository.save(cart);
 			return cartDTO;
 		} else {
@@ -173,6 +175,12 @@ public class CartService {
 	public void deleteCart(Integer id) {
 		Cart cartToDelete = cartRepository.findById(id)
 				.orElseThrow(() -> new NotFoundException("Cart with id %d not found.".formatted(id)));
+		// If cart is vinculated to an user, desvinculate it first
+		if(cartToDelete.getUser() != null) {
+			User cartUser = userRepo.findById(cartToDelete.getUser().getId()).get();
+			cartUser.setCart(null);
+			userRepo.save(cartUser);
+		}
 		cartRepository.delete(cartToDelete);
 	}
 }
