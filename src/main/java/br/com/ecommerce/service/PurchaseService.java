@@ -3,6 +3,7 @@ package br.com.ecommerce.service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,12 +13,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import br.com.ecommerce.domain.Item;
 import br.com.ecommerce.domain.Purchase;
 import br.com.ecommerce.domain.UserPrincipal;
 import br.com.ecommerce.dto.PurchaseDTO;
 import br.com.ecommerce.exceptions.BadRequestException;
 import br.com.ecommerce.exceptions.ForbiddenException;
 import br.com.ecommerce.exceptions.NotFoundException;
+import br.com.ecommerce.repositories.ItemRepository;
 import br.com.ecommerce.repositories.PurchaseRepository;
 
 @Service
@@ -28,6 +31,9 @@ public class PurchaseService {
 
 	@Autowired
 	private ModelMapper mapper;
+
+	@Autowired
+	private ItemRepository itemRepository;
 
 	/**
 	 * 
@@ -182,6 +188,10 @@ public class PurchaseService {
 	public void deletePurchase(Integer id, UserPrincipal userPrincipal) {
 		Purchase purchaseToDelete = purchaseRepository.findById(id)
 				.orElseThrow(() -> new NotFoundException("Purchase with id %d not found".formatted(id)));
+		List<Item> vinculatedItem = itemRepository.findByIdIn(
+				purchaseToDelete.getItems().stream().mapToInt(Item::getId)
+					.boxed().collect(Collectors.toList()));
+
 		purchaseRepository.delete(purchaseToDelete);
 	}
 

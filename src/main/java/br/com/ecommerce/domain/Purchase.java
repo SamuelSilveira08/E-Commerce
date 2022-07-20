@@ -3,6 +3,7 @@ package br.com.ecommerce.domain;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -35,7 +36,7 @@ public class Purchase {
 	@NotNull(message = "Field price cannot be null - If purchase has no price, pass 0.")
 	private Double price;
 	
-	@OneToMany(mappedBy = "purchase")
+	@OneToMany(mappedBy = "purchase", cascade = CascadeType.ALL, orphanRemoval = true)
 	@NotNull(message = "Field products cannot be null!")
 	private List<Item> items;
 	
