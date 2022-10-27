@@ -1,6 +1,6 @@
 openapi: 3.0.1
 info:
-  title: Vinharia Online
+  title: E-Commerce API
   version: 1.0.0
   contact:
     name: Samuel Silveira
