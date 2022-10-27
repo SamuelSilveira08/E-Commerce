@@ -1,0 +1,1274 @@
+openapi: 3.0.1
+info:
+  title: Vinharia Online
+  version: 1.0.0
+  contact:
+    name: Samuel Silveira
+    email: samuel.santossilveira08@gmail.com
+servers:
+  - url: http://localhost:8080
+tags:
+  - name: Authentication and Login
+  - name: Users
+  - name: Products
+  - name: Carts
+  - name: Items
+  - name: Purchases
+paths:
+  /users/auth/login:
+    post:
+      tags: 
+        - Authentication and Login
+      operationId: login
+      description: Log in and authenticate in the application
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/loginRequest'
+      responses:
+        '200':
+          description: Successfully logged in and authenticated
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/userResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '500':
+          $ref: '#/components/responses/500'
+  /users/auth/refresh:
+    post:
+      tags:
+        - Authentication and Login
+      operationId: refreshToken
+      description: Refresh access token and refresh token
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/refreshAuthRequest'
+      responses:
+        '200':
+          description: Successfully refreshed access token and refresh token
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/userResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '500':
+          $ref: '#/components/responses/500'
+  /users:
+    get:
+      security: 
+        - JWT: []
+      tags: 
+        - Users
+      operationId: getAllUsers
+      description: Retrieve all users saved
+      parameters:
+        - name: pageNum
+          in: query
+          description: Number of the page to retrieve data
+          schema:
+            type: integer
+          required: false
+        - name: numberItems
+          in: query
+          description: Number of items in each page
+          schema:
+            type: integer
+          required: false
+        - name: sortBy
+          in: query
+          description: User class' field to sort data by
+          schema:
+            type: string
+          required: false
+      responses:
+        '200':
+          description: Successfully retrieved users
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/userResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '500':
+          $ref: '#/components/responses/500'
+    post:
+      tags:
+        - Users
+      operationId: saveUser
+      description: Save an user
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/userRequest'
+      responses:
+        '201': 
+          description: Successfully saved user
+          content: 
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/userResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '500':
+          $ref: '#/components/responses/500'
+  /users/{userId}:
+    get:
+      tags:
+        - Users
+      security: 
+        - JWT: []
+      operationId: getUserById
+      description: Retrieve a user by their id
+      parameters:
+        - name: userId
+          in: path
+          description: userId from user you want to get the data
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: User successfully retrieved
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/userResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    delete:
+      tags:
+        - Users
+      security: 
+        - JWT: []
+      description: Delete an user
+      operationId: deleteUser
+      parameters:
+        - name: userId
+          in: path
+          description: userId from user you want to delete
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully deleted user
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    put:
+      tags:
+        - Users
+      security: 
+        - JWT: []
+      description: Update an user
+      operationId: updateUser
+      parameters:
+        - name: userId
+          in: path
+          description: userId from user you want to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/userRequest'
+      responses:
+        '200':
+          description: Successfully updated user
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/userResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+  /users/change-password:
+    put:
+      tags:
+        - Users
+      security: 
+        - JWT: []
+      description: "Change user's password"
+      operationId: changeUserPassword
+      requestBody:
+        content:
+          'application/json':
+            schema: 
+              $ref: '#/components/schemas/changePasswordRequest'
+      responses:
+        '200':
+          description: "User's password successfully modified"
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '500':
+          $ref: '#/components/responses/500'
+  /products:
+    get:
+      tags: 
+        - Products
+      description: Retrieve all products
+      operationId: getAllProducts
+      parameters:
+        - name: pageNum
+          in: query
+          description: Number of the page to retrieve data
+          schema:
+            type: integer
+          required: false
+        - name: numberItems
+          in: query
+          description: Number of items in each page
+          schema:
+            type: integer
+          required: false
+        - name: sortBy
+          in: query
+          description: Product class' field to sort data by
+          schema:
+            type: string
+          required: false
+      responses:
+        '200':
+          description: Successfully retrieved products
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/productResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '500':
+          $ref: '#/components/responses/500'
+    post:
+      tags: 
+        - Products
+      description: Register a new product (only for admins)
+      operationId: saveProduct
+      security:
+        - JWT: []
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/productRequest'
+      responses:
+        '201':
+          description: Product saved successfully
+          content:
+            'application/json':
+              schema:
+                $ref:  '#/components/schemas/productResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '500':
+          $ref: '#/components/responses/500'
+  /products/{productId}:
+    get:
+      tags: 
+        - Products
+      description: Retrieve a product by its id
+      operationId: getProductById
+      parameters:
+        - name: productId
+          in: path
+          description: Id from product you want to retrieve data
+          required: true
+          schema:
+            type: integer
+      responses:
+         '200':
+           description: "Product's data successfully retrieved"            
+           content:
+             'application/json':
+               schema:
+                 $ref: '#/components/schemas/productResponse'
+         '400':
+            $ref: '#/components/responses/400'
+         '404':
+            $ref: '#/components/responses/404'
+         '500':
+            $ref: '#/components/responses/500'      
+    put:
+      tags: 
+        - Products
+      description: Update a product (only for admins)
+      operationId: updateProduct
+      security:
+        - JWT: []
+      parameters:
+        - name: productId
+          in: path
+          description: Id from product you want to update data 
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/productRequest'
+      responses:
+        '200':
+           description: abc
+           content:
+             'application/json':
+               schema:
+                 $ref: '#/components/schemas/productResponse'
+        '400':
+           $ref: '#/components/responses/400'
+        '401':
+           $ref: '#/components/responses/401'
+        '403':
+           $ref: '#/components/responses/403'
+        '404':
+           $ref: '#/components/responses/404'
+        '500':
+           $ref: '#/components/responses/500'     
+    delete:
+      tags: 
+        - Products
+      description: Delete a product (only for admins)
+      operationId: deleteProduct
+      security:
+        - JWT: []
+      parameters:
+        - name: productId
+          in: path
+          description: Id from product you want to delete
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+           description: "Product's data successfully deleted"
+        '400':
+           $ref: '#/components/responses/400'
+        '401':
+           $ref: '#/components/responses/401'
+        '403':
+           $ref: '#/components/responses/403'
+        '404':
+           $ref: '#/components/responses/404'
+        '500':
+           $ref: '#/components/responses/500'        
+  /carts:
+    get:
+      tags: 
+        - Carts
+      description: Retrieve all carts (admins only)
+      operationId: getAllCarts
+      parameters:
+        - name: pageNum
+          in: query
+          description: Number of the page to retrieve data
+          schema:
+            type: integer
+          required: false
+        - name: numberItems
+          in: query
+          description: Number of items in each page
+          schema:
+            type: integer
+          required: false
+        - name: sortBy
+          in: query
+          description: Cart class' field to sort data by
+          schema:
+            type: string
+          required: false
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: All carts retrieved successfully
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/cartResponse'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+           $ref: '#/components/responses/401'
+        '403':
+           $ref: '#/components/responses/403'
+        '500':
+           $ref: '#/components/responses/500'
+    post:
+      tags: 
+        - Carts
+      description: Register new cart
+      operationId: saveCart
+      security:
+        - JWT: []
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/cartRequest'
+      responses:
+        '201':
+          description: Cart successfully created
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/cartResponse'
+        '400':
+           $ref: '#/components/responses/400'
+        '401':
+           $ref: '#/components/responses/401'
+        '403':
+           $ref: '#/components/responses/403'
+        '500':
+           $ref: '#/components/responses/500'           
+  /carts/{cartId}:
+    get:
+      tags: 
+        - Carts
+      description: Retrieve cart's data by id
+      operationId: getCartById
+      security:
+        - JWT: []
+      parameters:
+        - name: cartId
+          in: path
+          required: true
+          description: Id from cart you want to retrieve data
+          schema:
+            type: integer
+      responses:
+        '200':
+           description: Successfully retrieved data
+           content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/cartResponse'
+        '400':
+           $ref: '#/components/responses/400'
+        '401':
+           $ref: '#/components/responses/401'
+        '403':
+           $ref: '#/components/responses/403'
+        '404':
+           $ref: '#/components/responses/404'
+        '500':
+           $ref: '#/components/responses/500'
+    put:
+      tags: 
+        - Carts
+      description: Update cart by id
+      operationId: updateCart
+      security:
+        - JWT: []
+      parameters:
+        - name: cartId
+          in: path
+          required: true
+          description: Id from cart you want to update data
+          schema:
+            type: integer
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/cartRequest'
+      responses:
+        '200':
+          description: Successfully updated cart's data
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/cartResponse'
+        '400':
+           $ref: '#/components/responses/400'
+        '401':
+           $ref: '#/components/responses/401'
+        '403':
+           $ref: '#/components/responses/403'
+        '404':
+           $ref: '#/components/responses/404'
+        '500':
+           $ref: '#/components/responses/500'
+    delete:
+      tags: 
+        - Carts
+      description: Delete cart by id
+      operationId: deleteCart
+      security:
+        - JWT: []
+      parameters:
+        - name: cartId
+          in: path
+          required: true
+          description: Id from cart you want to delete
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully deleted cart
+        '400':
+           $ref: '#/components/responses/400'
+        '401':
+           $ref: '#/components/responses/401'
+        '403':
+           $ref: '#/components/responses/403'
+        '404':
+           $ref: '#/components/responses/404'
+        '500':
+           $ref: '#/components/responses/500'
+  /items:
+    get:
+      tags: 
+        - Items
+      description: Retrieve all items' data (admins only)
+      operationId: getAllItems
+      parameters:
+        - name: pageNum
+          in: query
+          description: Number of the page to retrieve data
+          schema:
+            type: integer
+          required: false
+        - name: numberItems
+          in: query
+          description: Number of items in each page
+          schema:
+            type: integer
+          required: false
+        - name: sortBy
+          in: query
+          description: Item class' field to sort data by
+          schema:
+            type: string
+          required: false
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: Successfully retrieved items' data
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/itemResponse'
+        '400':
+           $ref: '#/components/responses/400'
+        '401':
+           $ref: '#/components/responses/401'
+        '403':
+           $ref: '#/components/responses/403'
+        '500':
+           $ref: '#/components/responses/500'
+    post:
+      tags: 
+        - Items
+      description: Register new item
+      operationId: saveItem
+      security:
+        - JWT: []
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/itemRequest'
+      responses:
+        '201':
+          description: Successfully registered item
+        '400':
+           $ref: '#/components/responses/400'
+        '401':
+           $ref: '#/components/responses/401'
+        '403':
+           $ref: '#/components/responses/403'
+        '500':
+           $ref: '#/components/responses/500'
+  /items/{itemId}:
+    get:
+      tags: 
+        - Items
+      description: Retrieve item data by its id
+      operationId: getItemById
+      security:
+        - JWT: []
+      parameters:
+        - name: itemId
+          in: path
+          required: true
+          description: Id from item you want to retrieve data
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully retrieved item's data
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/itemResponse'
+        '400':
+           $ref: '#/components/responses/400'
+        '401':
+           $ref: '#/components/responses/401'
+        '403':
+           $ref: '#/components/responses/403'
+        '404':
+           $ref: '#/components/responses/404'
+        '500':
+           $ref: '#/components/responses/500'
+    put:
+      tags: 
+        - Items
+      description: Update item data by its id
+      operationId: updateItem
+      security:
+        - JWT: []
+      parameters:
+        - name: itemId
+          in: path
+          required: true
+          description: Id from item you want to update data
+          schema:
+            type: integer
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/itemRequest'
+      responses:
+        '200':
+          description: Successfully updated item
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/itemResponse'
+        '400':
+           $ref: '#/components/responses/400'
+        '401':
+           $ref: '#/components/responses/401'
+        '403':
+           $ref: '#/components/responses/403'
+        '404':
+           $ref: '#/components/responses/404'
+        '500':
+           $ref: '#/components/responses/500'
+    delete:
+      tags: 
+        - Items
+      description: Delete item data by its id
+      operationId: deleteItemById
+      security:
+        - JWT: []
+      parameters:
+        - name: itemId
+          in: path
+          required: true
+          description: Id from item you want to delete
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully deleted item
+        '400':
+           $ref: '#/components/responses/400'
+        '401':
+           $ref: '#/components/responses/401'
+        '403':
+           $ref: '#/components/responses/403'
+        '404':
+           $ref: '#/components/responses/404'
+        '500':
+           $ref: '#/components/responses/500'
+  /items/byCart/{cartId}:
+    get:
+      tags: 
+        - Items
+      description: Retrieve all items from a cart
+      operationId: getItemsByCartId
+      parameters:
+        - name: pageNum
+          in: query
+          description: Number of the page to retrieve data
+          schema:
+            type: integer
+          required: false
+        - name: numberItems
+          in: query
+          description: Number of items in each page
+          schema:
+            type: integer
+          required: false
+        - name: sortBy
+          in: query
+          description: Item class' field to sort data by
+          schema:
+            type: string
+          required: false
+        - name: cartId
+          in: path
+          required: true
+          description: Id from cart you want to retrieve items' data
+          schema:
+            type: integer
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: Successfully retrieved item's data from cart
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/itemResponse'
+        '400':
+           $ref: '#/components/responses/400'
+        '401':
+           $ref: '#/components/responses/401'
+        '403':
+           $ref: '#/components/responses/403'
+        '404':
+           $ref: '#/components/responses/404'
+        '500':
+           $ref: '#/components/responses/500'
+  /purchases:
+    get:
+      tags: 
+        - Purchases
+      description: Retrieve all purchases' data (admins only)
+      operationId: getAllPurchases
+      parameters:
+        - name: pageNum
+          in: query
+          description: Number of the page to retrieve data
+          schema:
+            type: integer
+          required: false
+        - name: numberItems
+          in: query
+          description: Number of items in each page
+          schema:
+            type: integer
+          required: false
+        - name: sortBy
+          in: query
+          description: Purchase class' field to sort data by
+          schema:
+            type: string
+          required: false
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: Successfully retrieved purchases' data
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/purchaseResponse'
+        '400':
+           $ref: '#/components/responses/400'
+        '401':
+           $ref: '#/components/responses/401'
+        '403':
+           $ref: '#/components/responses/403'
+        '500':
+           $ref: '#/components/responses/500'
+    post:
+      tags: 
+        - Purchases
+      description: Register new purchase
+      operationId: savePurchase
+      security:
+        - JWT: []
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/purchaseRequest'
+      responses:
+        '201':
+          description: Successfully registered purchase
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/purchaseResponse'
+        '400':
+           $ref: '#/components/responses/400'
+        '401':
+           $ref: '#/components/responses/401'
+        '403':
+           $ref: '#/components/responses/403'
+        '500':
+           $ref: '#/components/responses/500'
+  /purchases/{purchaseId}:
+    get:
+      tags: 
+        - Purchases
+      description: Retrieve purchase data by its id
+      operationId: getPurchaseById
+      security:
+        - JWT: []
+      parameters:
+        - name: purchaseId
+          in: path
+          required: true
+          description: Id from purchase you want to retrieve data
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully retrieved purchase's data
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/purchaseResponse'
+        '400':
+           $ref: '#/components/responses/400'
+        '401':
+           $ref: '#/components/responses/401'
+        '403':
+           $ref: '#/components/responses/403'
+        '404':
+           $ref: '#/components/responses/404'
+        '500':
+           $ref: '#/components/responses/500'
+    put:
+      tags: 
+        - Purchases
+      description: Update purchase's data by its id
+      operationId: updatePurchaseById
+      security:
+        - JWT: []
+      parameters:
+        - name: purchaseId
+          in: path
+          required: true
+          description: Id from purchase you want to update data
+          schema:
+            type: integer
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/purchaseRequest'
+      responses:
+        '200':
+          description: Successfully updated purchase's data
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/purchaseResponse'
+        '400':
+           $ref: '#/components/responses/400'
+        '401':
+           $ref: '#/components/responses/401'
+        '403':
+           $ref: '#/components/responses/403'
+        '404':
+           $ref: '#/components/responses/404'
+        '500':
+           $ref: '#/components/responses/500'
+    delete:
+      tags: 
+        - Purchases
+      description: Delete purchase data by its id
+      operationId: deletePurchaseById
+      security:
+        - JWT: []
+      parameters:
+        - name: purchaseId
+          in: path
+          required: true
+          description: Id from purchase you want to delete
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully deleted purchase
+        '400':
+           $ref: '#/components/responses/400'
+        '401':
+           $ref: '#/components/responses/401'
+        '403':
+           $ref: '#/components/responses/403'
+        '404':
+           $ref: '#/components/responses/404'
+        '500':
+           $ref: '#/components/responses/500'
+  /purchases/byUser/{userId}:
+    get:
+      tags: 
+        - Purchases
+      description: Retrieve purchase data by user id
+      operationId: getPurchaseByUserId
+      parameters:
+        - name: pageNum
+          in: query
+          description: Number of the page to retrieve data
+          schema:
+            type: integer
+          required: false
+        - name: numberItems
+          in: query
+          description: Number of items in each page
+          schema:
+            type: integer
+          required: false
+        - name: sortBy
+          in: query
+          description: Purchase class' field to sort data by
+          schema:
+            type: string
+          required: false
+        - name: userId
+          in: path
+          required: true
+          description: Id from user whose purchase you want to retrieve data
+          schema:
+            type: integer
+      security:
+        - JWT: []
+      responses:
+        '200':
+          description: Successfully retrieved purchase's data
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/purchaseResponse'
+        '400':
+           $ref: '#/components/responses/400'
+        '401':
+           $ref: '#/components/responses/401'
+        '403':
+           $ref: '#/components/responses/403'
+        '404':
+           $ref: '#/components/responses/404'
+        '500':
+           $ref: '#/components/responses/500'
+
+components:
+  securitySchemes:
+    JWT:
+      type: http
+      scheme: bearer
+  schemas:
+    loginRequest:
+      type: object
+      required: 
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+    refreshAuthRequest:
+      type: object
+      required:
+        - refreshToken
+      properties:
+        refreshToken:
+          type: string
+    userRequest:
+      type: object
+      required:
+        - firstName
+        - lastName
+        - email
+        - password
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+        purchases:
+          $ref: '#/components/schemas/purchaseRequest'
+    changePasswordRequest:
+      type: object
+      required:
+        - currentPassword
+        - newPassword
+      properties:
+        currentPassword:
+          type: string
+          format: password
+        newPassword:
+          type: string
+          format: password
+    productRequest:
+      type: object
+      required:
+        - name
+        - price
+        - stock
+      properties:
+        name:
+          type: string
+        price:
+          type: number
+          format: double
+        stock:
+          type: integer
+    itemRequest:
+      type: object
+      required:
+        - productId
+        - quantity
+        - cartId
+      properties:
+        productId:
+          type: integer
+        productName:
+          type: string
+        productStock:
+          type: integer
+        productPrice:
+          type: number
+          format: double
+        quantity:
+          type: integer
+        cartId:
+          type: integer
+        purchaseId:
+          type: integer
+    cartRequest:
+      type: object
+      required:
+        - userId
+      properties:
+        totalPrice:
+          type: number
+          format: double
+        userId:
+          type: integer
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/itemRequest'
+    purchaseRequest:
+      type: object
+      required:
+        - price
+        - date
+        - userId
+        - items
+      properties:
+        price:
+          type: number
+          format: double
+        date:
+          type: string
+          format: date
+        userId:
+          type: integer
+        items:
+          type: array
+          items:
+            allOf:
+              - $ref: '#/components/schemas/itemRequest'
+    userResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+          format: email
+        firstName:
+          type: string
+        lastName:
+          type: string
+        admin:
+           type: boolean
+        purchases:
+          allOf:
+            - $ref: '#/components/schemas/purchaseResponse'
+    itemResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        productId:
+          type: integer
+        productName:
+          type: string
+        productStock:
+          type: integer
+        productPrice:
+          type: number
+        price:
+          type: number
+        cartId:
+          type: integer
+        purchaseId:
+          type: integer
+    cartResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        totalPrice:
+          type: number
+          format: double
+        userId:
+          type: integer
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/itemResponse'
+    productResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        price:
+          type: number
+          format: double
+        stock:
+          type: integer
+    purchaseResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        price:
+          type: number
+        date:
+          type: string
+          format: date
+        userId:
+          type: integer
+        items:
+          allOf:
+            - $ref: '#/components/schemas/itemResponse'
+    requestErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        httpStatus:
+          type: string
+    internalServerErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        httpStatus:
+          type: string
+        stackTrace:
+          type: array
+          items:
+            type: object
+  responses:
+    '400':
+      description: Something in the request is wrong
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/requestErrorResponse'
+    '401':
+      description: User not authenticated
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/requestErrorResponse'
+    '403':
+      description: User does not have permission to access this endpoint
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/requestErrorResponse'
+    '404':
+      description: Resource not found
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/requestErrorResponse'
+    '500':
+      description: An internal server error has occured
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/internalServerErrorResponse'
+        
+  
+    
+        
+          
+         
+          
+            
+            
+            
+            
+            
+            
+            
+            
+        
