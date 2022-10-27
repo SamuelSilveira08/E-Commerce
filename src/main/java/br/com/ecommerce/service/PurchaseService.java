@@ -188,11 +188,13 @@ public class PurchaseService {
 	public void deletePurchase(Integer id, UserPrincipal userPrincipal) {
 		Purchase purchaseToDelete = purchaseRepository.findById(id)
 				.orElseThrow(() -> new NotFoundException("Purchase with id %d not found".formatted(id)));
-		List<Item> vinculatedItem = itemRepository.findByIdIn(
+		List<Item> vinculatedItems = itemRepository.findByIdIn(
 				purchaseToDelete.getItems().stream().mapToInt(Item::getId)
 					.boxed().collect(Collectors.toList()));
 
 		purchaseRepository.delete(purchaseToDelete);
+		itemRepository.deleteAll(vinculatedItems);
+		// Check if it'll work
 	}
 
 }

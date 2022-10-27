@@ -1,5 +1,6 @@
 package br.com.ecommerce.domain;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -31,7 +32,7 @@ public class Item {
 	@NotNull(message = "Field product cannot be null!")
 	private Product product;
 
-	@ManyToOne
+	@ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
 	@JoinColumn(name = "id_cart")
 	@NotNull(message = "Field cart cannot be null!")
 	private Cart cart;

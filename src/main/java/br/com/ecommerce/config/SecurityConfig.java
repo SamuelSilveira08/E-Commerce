@@ -45,6 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		 * available to be accessible through JavaScript, so I wouldn't recommend that xD
 		 */
 		
+		// Desabling csrf to avoid problems testing the api
 		http.csrf().disable();
 
 		http.logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"));

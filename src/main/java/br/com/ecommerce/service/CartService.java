@@ -32,7 +32,7 @@ public class CartService {
 
 	@Autowired
 	private ModelMapper mapper;
-	
+
 	@Autowired
 	private UserRepository userRepo;
 
@@ -44,8 +44,8 @@ public class CartService {
 	 * @param pageNum     number of the page to be returned
 	 * @param numberItems number of items (carts) per page
 	 * @param sortBy      cart class' field to sort data by
-	 * @return list with all carts from given page (number of items is up to numberItems
-	 *         parameter), sorted by sortBy parameter.
+	 * @return list with all carts from given page (number of items is up to
+	 *         numberItems parameter), sorted by sortBy parameter.
 	 * @throws BadRequestException if sortBy parameters doesn't exist in Cart class
 	 */
 
@@ -119,7 +119,8 @@ public class CartService {
 			throw new ConstraintViolationException("Cart must be sent with userId", null);
 		}
 		Cart cart = mapper.map(cartDTO, Cart.class);
-		User user = userRepo.findById(cartDTO.getUserId()).get();
+		User user = userRepo.findById(cartDTO.getUserId()).orElseThrow(
+				() -> new NotFoundException("User with given id %d not found".formatted(cartDTO.getUserId())));
 		cart.setUser(user);
 		user.setCart(cart);
 		if (user.getEmail() == userPrincipal.getUsername() || userPrincipal.isAdmin()) {
@@ -148,11 +149,13 @@ public class CartService {
 		Cart cart = cartRepository.findById(id)
 				.orElseThrow(() -> new NotFoundException("Cart with given id %d not found".formatted(id)));
 		cartDTO.setId(id);
-		if(cartDTO.getUserId() == null) {
-			throw new BadRequestException("userId cannot be null! Please, refactor your request and include the userId");
+		if (cartDTO.getUserId() == null) {
+			throw new BadRequestException(
+					"userId cannot be null! Please, refactor your request and include the userId");
 		}
 		cart = mapper.map(cartDTO, Cart.class);
-		User user = userRepo.findById(cartDTO.getUserId()).get();
+		User user = userRepo.findById(cartDTO.getUserId()).orElseThrow(
+				() -> new NotFoundException("User with given id %d not found".formatted(cartDTO.getUserId())));
 		user.setCart(cart);
 		cart.setUser(user);
 		if (user.getEmail() == userPrincipal.getUsername() || userPrincipal.isAdmin()) {
@@ -176,7 +179,7 @@ public class CartService {
 		Cart cartToDelete = cartRepository.findById(id)
 				.orElseThrow(() -> new NotFoundException("Cart with id %d not found.".formatted(id)));
 		// If cart is vinculated to an user, desvinculate it first
-		if(cartToDelete.getUser() != null) {
+		if (cartToDelete.getUser() != null) {
 			User cartUser = userRepo.findById(cartToDelete.getUser().getId()).get();
 			cartUser.setCart(null);
 			userRepo.save(cartUser);

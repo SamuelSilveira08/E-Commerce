@@ -38,8 +38,6 @@ public class CartController {
 	 * @throws AccessDeniedException if authenticated user is not an admin
 	 */
 	
-	// TODO change name of the project
-	
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
 	@PreAuthorize(value = "hasRole('ADMIN')")

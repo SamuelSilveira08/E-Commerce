@@ -35,7 +35,7 @@ public class Cart {
 	@NotNull(message = "Field cannot be null. If cart has no items yet, totalPrice must receive 0")
 	private Double totalPrice;
 	
-	@OneToOne(mappedBy = "cart", cascade = CascadeType.MERGE)
+	@OneToOne(mappedBy = "cart", cascade = {CascadeType.MERGE, CascadeType.PERSIST}, orphanRemoval = true)
 	@NotNull(message = "Field user cannot be null!")
 	private User user;
 	
